@@ -23,6 +23,11 @@ jobs:
         run: |
           pip install platformio
 
+      - name: Install esptool
+        run: |
+          pip install esptool
+
+
       - name: Build
         working-directory: source
         run: |

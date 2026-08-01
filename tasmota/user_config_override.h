@@ -54,6 +54,22 @@
 // NTP time support (usually enabled by default)
  #define USE_NTP
 
+#ifndef USE_I2C
+#define USE_I2C
+#endif
+
+#ifndef USE_RTC_CHIPS
+#define USE_RTC_CHIPS
+#endif
+
+#ifndef USE_DS3231
+#define USE_DS3231
+#endif
+
+// Optional
+#define RTC_NTP_SERVER
+
+
 /*
  *  Later, if you want to go even more minimal:
  *  - Disable web UI: #undef USE_WEBSERVER

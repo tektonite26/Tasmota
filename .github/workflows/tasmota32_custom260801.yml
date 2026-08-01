@@ -23,13 +23,26 @@ jobs:
         run: |
           pip install platformio
 
-      - name: Build
+            - name: Build
         working-directory: source
         run: |
           pio run -e tasmota32
 
+      - name: Create factory image
+        working-directory: source
+        run: |
+          esptool.py merge_bin \
+            -o tasmota32.factory.bin \
+            --flash_mode dio \
+            --flash_freq 40m \
+            --flash_size 4MB \
+            0x1000 .pio/build/tasmota32/bootloader.bin \
+            0x8000 .pio/build/tasmota32/partitions.bin \
+            0xe000 .pio/build/tasmota32/ota_data_initial.bin \
+            0x10000 .pio/build/tasmota32/tasmota32.bin
+
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: tasmota32-custom
-          path: source/build_output/firmware/tasmota32.bin
+          name: tasmota32-factory
+          path: source/tasmota32.factory.bin

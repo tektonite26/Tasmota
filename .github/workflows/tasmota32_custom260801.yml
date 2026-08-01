@@ -39,6 +39,7 @@ jobs:
         working-directory: source
         run: |
           esptool merge-bin \
+          --chip esp32
             -o tasmota32.factory.bin \
             --flash-mode dio \
             --flash-freq 40m \

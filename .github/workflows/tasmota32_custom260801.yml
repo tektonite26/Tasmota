@@ -43,7 +43,6 @@ jobs:
             --flash_size 4MB \
             0x1000 .pio/build/tasmota32/bootloader.bin \
             0x8000 .pio/build/tasmota32/partitions.bin \
-            0xe000 .pio/build/tasmota32/ota_data_initial.bin \
             0x10000 .pio/build/tasmota32/tasmota32.bin
 
       - name: Upload firmware

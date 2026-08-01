@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Clone Tasmota
+      - name: Clone Tasmota 15.5
         run: |
           git clone --depth 1 --branch v15.5.0 https://github.com/arendst/Tasmota.git source
 
@@ -19,31 +19,33 @@ jobs:
         run: |
           cp tasmota/user_config_override.h source/tasmota/
 
-      - name: Install PlatformIO
+      - name: Install tools
         run: |
-          pip install platformio
+          pip install platformio esptool
 
-      - name: Install esptool
-        run: |
-          pip install esptool
-
-
-      - name: Build
+      - name: Build Tasmota ESP32
         working-directory: source
         run: |
           pio run -e tasmota32
 
+      - name: Show build output
+        working-directory: source
+        run: |
+          echo "===== BUILD FILES ====="
+          ls -lah .pio/build/tasmota32/
+          echo "======================="
+
       - name: Create factory image
         working-directory: source
         run: |
-          esptool.py merge_bin \
+          esptool merge-bin \
             -o tasmota32.factory.bin \
-            --flash_mode dio \
-            --flash_freq 40m \
-            --flash_size 4MB \
+            --flash-mode dio \
+            --flash-freq 40m \
+            --flash-size 4MB \
             0x1000 .pio/build/tasmota32/bootloader.bin \
             0x8000 .pio/build/tasmota32/partitions.bin \
-            0x10000 .pio/build/tasmota32/tasmota32.bin
+            0x10000 .pio/build/tasmota32/firmware.bin
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4

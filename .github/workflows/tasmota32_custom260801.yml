@@ -15,9 +15,17 @@ jobs:
         run: |
           git clone --depth 1 --branch v15.5.0 https://github.com/arendst/Tasmota.git source
 
-      - name: Copy configuration
+      - name: Copy override file
         run: |
           cp ./tasmota/user_config_override.h source/tasmota/user_config_override.h
+
+      - name: Inject config override flag
+        run: |
+          if grep -q "build_flags" source/platformio.ini; then
+            sed -i 's/^build_flags[[:space:]]*=.*/& -DUSE_CONFIG_OVERRIDE/' source/platformio.ini
+          else
+            echo "build_flags = -DUSE_CONFIG_OVERRIDE" >> source/platformio.ini
+          fi
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -34,7 +42,7 @@ jobs:
         run: |
           pio run -e tasmota32
 
-      - name: List firmware files
+      - name: Show build files
         working-directory: source
         run: |
           find build_output -type f | sort

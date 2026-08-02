@@ -36,6 +36,9 @@
 // -------- Keep needed features --------
 
 #define USE_TELNET
+#ifndef USE_TCP_BRIDGE
+#define USE_TCP_BRIDGE
+#endif
 #define USE_I2C
 #define USE_RTC_CHIPS
 #define USE_DS3231
